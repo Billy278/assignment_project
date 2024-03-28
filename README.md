@@ -83,7 +83,7 @@
     To run this program, first clone the repository. then go to the cmd directory. after that write the command go run main.go  in the terminal.
     If an error occurs in the Katarat/JWT library, use version v0.1.8
 
-- to run customer birthday checks automatically at 1 day intervals uncomment go func() in the main.go file
+    to run customer birthday checks automatically at 1 day intervals uncomment go func() in the main.go file
 
 ## env example:
 
