@@ -152,6 +152,7 @@ func (srv *PromoSrvImpl) GeneratePromoCode(ctx context.Context, idUser uint64, n
 		JTI:       "jti",
 		Type:      modelsToken.ACCESS_TOKEN,
 	}
+
 	accessTokenClaim := struct {
 		modelsToken.DefaultClaimPromo
 		modelsToken.AccessClaimPromo
@@ -162,6 +163,7 @@ func (srv *PromoSrvImpl) GeneratePromoCode(ctx context.Context, idUser uint64, n
 			Name:   name,
 		},
 	}
+
 	res, err := crypto.CreatedJWT(accessTokenClaim)
 	if err != nil {
 		err = errors.New("failed to create token")
@@ -191,6 +193,7 @@ func (srv *PromoSrvImpl) SendNotification(ctx context.Context, name, promo, rece
 		err = errors.New("Fail send data gmail")
 		return
 	}
+
 	res, err := client.Do(req)
 	if err != nil {
 		return
@@ -200,12 +203,14 @@ func (srv *PromoSrvImpl) SendNotification(ctx context.Context, name, promo, rece
 	if err != nil {
 		return
 	}
+
 	resData := responses.Response{}
 	err = json.Unmarshal(data, &resData)
 	if err != nil {
 		err = errors.New("Fail to unmarshal  data gmail")
 		return
 	}
+
 	fmt.Println(resData)
 	if !resData.Success {
 		err = errors.New("Fail to send  data gmail")

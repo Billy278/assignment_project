@@ -48,23 +48,26 @@ func (srv *OrderSrvImpl) SrvGetTokenWithPromo(ctx context.Context, kode_promo st
 	req, err := http.NewRequest(http.MethodGet, urlGetToken, nil)
 	if err != nil {
 		err = errors.New("Fail get promo token")
-
 		return
 	}
+
 	res, err := client.Do(req)
 	if err != nil {
 		return
 	}
+
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return
 	}
+
 	resData := responses.Response{}
 	err = json.Unmarshal(data, &resData)
 	if err != nil {
 		err = errors.New("Fail to unmarshal  data promo")
 		return
 	}
+
 	if !resData.Success {
 		err = errors.New("Fail to get  data promo")
 		return
@@ -75,6 +78,7 @@ func (srv *OrderSrvImpl) SrvGetTokenWithPromo(ctx context.Context, kode_promo st
 		err = errors.New("Fail to Marsal token")
 		return
 	}
+
 	json.Unmarshal(jsonData, &token)
 	return
 }
