@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	models "github.com/Billy278/assignment_project/modules/models/promo"
@@ -19,7 +20,7 @@ func NewPromoRepoImpl(db *sql.DB) PromoRepo {
 }
 func (repo *PromoRepoImpl) Created(ctx context.Context, promoIn models.Promo) (err error) {
 	fmt.Println("Repo Promo")
-	sql := "INSERT INTO promo (kode_promo,token,created_at) ($1,$2,$3)"
+	sql := "INSERT INTO promo (kode_promo,token,created_at)VALUES ($1,$2,$3)"
 	_, err = repo.DB.ExecContext(ctx, sql, promoIn.Kode_Promo, promoIn.Token, promoIn.Created_at)
 	if err != nil {
 		return err
@@ -40,6 +41,8 @@ func (repo *PromoRepoImpl) GetToken(ctx context.Context, Promo string) (resToken
 		if err != nil {
 			return
 		}
+	} else {
+		err = errors.New("NOT FOUND")
 	}
 	return
 }

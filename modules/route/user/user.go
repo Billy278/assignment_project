@@ -7,6 +7,7 @@ import (
 
 func NewUserRoute(v1 *gin.RouterGroup, userCtrl controllers.UserCtrl) {
 	g := v1.Group("/user")
+	g.POST("", userCtrl.Created)
 	g.GET("", userCtrl.GetAllUsersIsBrithday)
 
 }

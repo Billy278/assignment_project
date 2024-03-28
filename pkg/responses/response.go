@@ -5,6 +5,7 @@ const (
 	Success      = "Success"
 	NotFound     = "NOT FOUND"
 	InvalidBody  = "invalid body request"
+	InvalidParam = "Invalid Param"
 )
 
 type Response struct {

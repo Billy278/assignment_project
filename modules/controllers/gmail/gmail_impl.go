@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	models "github.com/Billy278/assignment_project/modules/models/gmail"
@@ -24,9 +25,10 @@ func NewGmailCtrImpl(v *validator.Validate, gmailsrv services.GmailSrv) GmailCtr
 
 }
 func (ctrl *GmailCtrImpl) Created(ctx *gin.Context) {
-	// validasi req much json
+	// validasi req
 	gmailIn := models.Gmail{}
-	err := ctx.ShouldBindJSON(gmailIn)
+	err := ctx.ShouldBindJSON(&gmailIn)
+	fmt.Println(gmailIn)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, responses.Response{
 			Code:    http.StatusBadRequest,
@@ -35,6 +37,7 @@ func (ctrl *GmailCtrImpl) Created(ctx *gin.Context) {
 		})
 		return
 	}
+	fmt.Println(gmailIn)
 	// validasi req
 	err = ctrl.Validate.Struct(gmailIn)
 	if err != nil {

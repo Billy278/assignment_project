@@ -56,6 +56,8 @@ func (srv *PromoSrvImpl) CreatedPromo(ctx context.Context) (err error) {
 		fmt.Println(err)
 		return
 	}
+	fmt.Println(resUser)
+
 	resToken := []string{}
 	var res string
 	// do loop apabila data yg diterima lebih dari 1
@@ -75,15 +77,15 @@ func (srv *PromoSrvImpl) CreatedPromo(ctx context.Context) (err error) {
 			return
 		}
 	}
-	promoIn := []models.Promo{}
+	//promoIn := []models.Promo{}
+	promoTemp := models.Promo{}
 	tNow := time.Now()
 	for i := 0; i < len(resToken); i++ {
-		promoIn[i].Created_at = &tNow
-		promoIn[i].Kode_Promo = fmt.Sprintf("HAPPYBIRTHDAY%v", resUser[i].Name)
-		promoIn[i].Token = resToken[i]
-		err = srv.RepoPromo.Created(ctx, promoIn[i])
+		promoTemp.Created_at = &tNow
+		promoTemp.Kode_Promo = fmt.Sprintf("HAPPYBIRTHDAY%v", resUser[i].Name)
+		promoTemp.Token = resToken[i]
+		err = srv.RepoPromo.Created(ctx, promoTemp)
 		if err != nil {
-
 			return
 		}
 	}
@@ -114,7 +116,9 @@ func (srv *PromoSrvImpl) GetUsersIsBirthday(ctx context.Context) (resUser []mode
 	if err != nil {
 		return
 	}
+
 	resData := responses.Response{}
+
 	err = json.Unmarshal(data, &resData)
 	if err != nil {
 		err = errors.New("Fail to unmarshal  data user")
@@ -138,6 +142,7 @@ func (srv *PromoSrvImpl) GetUsersIsBirthday(ctx context.Context) (resUser []mode
 func (srv *PromoSrvImpl) GeneratePromoCode(ctx context.Context, idUser uint64, name string) (tokenRes string, err error) {
 	// generate token
 	tNow := time.Now()
+	// set token expired berlaku 1 hari setelah di buat
 	defaultClaim := modelsToken.DefaultClaimPromo{
 		Expired:   int(tNow.Add(24 * time.Hour).Unix()),
 		NotBefore: int(time.Now().Unix()),
@@ -177,11 +182,11 @@ func (srv *PromoSrvImpl) SendNotification(ctx context.Context, name, promo, rece
 	body := fmt.Sprintf(`{
 				"name":"%v",
 				"promo" :"%v",
-				"receiver":"%v",
+				"receiver":"%v"
 				}`, name, promo, receiver)
 	BodyGmail := strings.NewReader(body)
-	urlGetUsers := fmt.Sprintf("http://%v:%v/api/gmail", os.Getenv("hostGmailServices"), os.Getenv("PortGmailServices"))
-	req, err := http.NewRequest(http.MethodPost, urlGetUsers, BodyGmail)
+	urlPostGmail := fmt.Sprintf("http://%v:%v/api/gmail", os.Getenv("hostGmailServices"), os.Getenv("PortGmailServices"))
+	req, err := http.NewRequest(http.MethodPost, urlPostGmail, BodyGmail)
 	if err != nil {
 		err = errors.New("Fail send data gmail")
 		return
@@ -201,6 +206,7 @@ func (srv *PromoSrvImpl) SendNotification(ctx context.Context, name, promo, rece
 		err = errors.New("Fail to unmarshal  data gmail")
 		return
 	}
+	fmt.Println(resData)
 	if !resData.Success {
 		err = errors.New("Fail to send  data gmail")
 		return

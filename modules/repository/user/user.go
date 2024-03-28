@@ -8,4 +8,6 @@ import (
 
 type UserRepo interface {
 	GetAllUserIsBirthday(ctx context.Context) (resUser []models.User, err error)
+	CreatedUser(ctx context.Context, userIn models.User) (err error)
+	RepoFindUser(ctx context.Context, username string) (err error)
 }

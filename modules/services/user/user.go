@@ -8,4 +8,6 @@ import (
 
 type UserSrv interface {
 	GetAllUserIsbrithday(ctx context.Context) (resUser []models.User, err error)
+	CreatedUser(ctx context.Context, userIn models.User) (err error)
+	SrvFindUser(ctx context.Context, username string) (err error)
 }
