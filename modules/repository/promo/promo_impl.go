@@ -20,8 +20,8 @@ func NewPromoRepoImpl(db *sql.DB) PromoRepo {
 }
 func (repo *PromoRepoImpl) Created(ctx context.Context, promoIn models.Promo) (err error) {
 	fmt.Println("Repo Promo")
-	sql := "INSERT INTO promo (kode_promo,token,created_at)VALUES ($1,$2,$3)"
-	_, err = repo.DB.ExecContext(ctx, sql, promoIn.Kode_Promo, promoIn.Token, promoIn.Created_at)
+	sql := "INSERT INTO promo (kode_promo,token,created_at)VALUES ($1,$2,$3) ON CONFLICT (kode_promo) DO UPDATE set token = $4"
+	_, err = repo.DB.ExecContext(ctx, sql, promoIn.Kode_Promo, promoIn.Token, promoIn.Created_at, promoIn.Token)
 	if err != nil {
 		return err
 	}
